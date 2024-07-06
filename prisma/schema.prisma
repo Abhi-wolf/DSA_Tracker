@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+// url      = env("DATABASE_URL")
+
+// Define enum for attempt status
+enum AttemptStatus {
+  done
+  not_done
+  attempted
+}
+
+enum LevelOfQuestion {
+  easy
+  medium
+  hard
+}
+
+model User {
+  id        String      @id @default(uuid())
+  name      String
+  email     String      @unique
+  password  String
+  notes     Notes[]
+  questions Attempt[]
+  bookmarks Bookmarks[]
+}
+
+model Question {
+  id        String          @id @default(uuid())
+  topic     String
+  problem   String
+  url       String
+  url2      String?
+  tag       String
+  level     LevelOfQuestion @default(easy)
+  notes     Notes[]
+  bookmarks Bookmarks[]
+  attempts  Attempt[]
+}
+
+model Notes {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId String
+  content    String
+}
+
+model Attempt {
+  user       User          @relation(fields: [userId], references: [id])
+  userId     String
+  question   Question      @relation(fields: [questionId], references: [id])
+  questionId String
+  status     AttemptStatus @default(not_done)
+  timestamp  DateTime      @default(now())
+
+  @@id([userId, questionId])
+}
+
+model Bookmarks {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId String
+  bookmarked Boolean  @default(false)
+
+  @@id([userId, questionId])
+}
