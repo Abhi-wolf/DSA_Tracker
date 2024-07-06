@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "seed": "node -r dotenv/config ./lib/seedData.js",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.16.1",
