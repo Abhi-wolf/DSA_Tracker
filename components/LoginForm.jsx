@@ -21,8 +21,6 @@ export function LoginForm() {
   const { register, handleSubmit } = useForm();
 
   async function onSubmit(data) {
-    // console.log("formData = ", data);
-
     const toastId = toast.loading("Logging in");
 
     const error = await loginUser(data);
@@ -32,7 +30,6 @@ export function LoginForm() {
         id: toastId,
       });
     } else {
-      console.log(error);
       toast.error(error, {
         id: toastId,
       });

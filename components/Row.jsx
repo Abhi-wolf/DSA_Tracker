@@ -39,7 +39,6 @@ const Row = ({ question, bookmarks, attempts, notes }) => {
 
   const handleChangeStatus = async (value) => {
     setStatus(value);
-    // console.log(value);
 
     const res = await updateStatus({
       id: question.id,
@@ -87,14 +86,14 @@ const Row = ({ question, bookmarks, attempts, notes }) => {
             status === "done"
               ? "bg-green-500"
               : status === "not_done"
-              ? "bg-red-500"
-              : "bg-yellow-500"
+                ? "bg-red-500"
+                : "bg-yellow-500"
           } hover:${
             status === "done"
               ? "bg-green-500"
               : status === "not_done"
-              ? "bg-red-500"
-              : "bg-yellow-500"
+                ? "bg-red-500"
+                : "bg-yellow-500"
           }`}
         >
           {status}

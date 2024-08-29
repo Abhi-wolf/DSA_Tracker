@@ -5,10 +5,10 @@ async function WeeklyChart() {
   const questionsDone = await getQuestionsDoneLastWeek();
 
   return (
-    <div className="flex flex-col justify-center items-center w-full h-full ">
+    <div className="flex flex-col gap-4 justify-center items-center w-full h-full ">
       <BarChart data={questionsDone} />
       <p className="text-xs text-muted-foreground">
-        Questions Done in this Week
+        Questions Done in last 7 days
       </p>
     </div>
   );

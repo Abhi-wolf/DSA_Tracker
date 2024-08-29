@@ -18,7 +18,7 @@ async function page({ params }) {
   ]);
 
   return (
-    <section className="mt-8 md:px-16">
+    <section className="mt-8 md:px-16 ">
       <div className="flex flex-col gap-6 md:gap-12">
         <ActiveLink tagName={tagName} topicName={topicName} />
         <Suspense fallback={<Spinner />}>

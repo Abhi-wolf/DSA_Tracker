@@ -16,7 +16,6 @@ export function SignOutBtn() {
         id: toastId,
       });
     } else {
-      console.log(error);
       toast.error(error, {
         id: toastId,
       });

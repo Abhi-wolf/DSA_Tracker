@@ -26,7 +26,6 @@ export function RegisterForm() {
   } = useForm();
 
   async function onSubmit(data) {
-    // console.log("formData = ", data);
     const user = await registerUser(data);
     if (user) router.push("/login");
   }

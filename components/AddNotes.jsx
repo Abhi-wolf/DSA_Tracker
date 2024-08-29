@@ -1,6 +1,6 @@
 "use client";
 
-import { Pencil2Icon } from "@radix-ui/react-icons";
+import { Pencil2Icon, ReloadIcon } from "@radix-ui/react-icons";
 import {
   Dialog,
   DialogContent,
@@ -10,21 +10,36 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { useState } from "react";
-import { Textarea } from "./ui/textarea";
+import { Suspense, useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import { addNote } from "@/lib/actions";
+import { addNote, deleteNote } from "@/lib/actions";
 import { toast } from "sonner";
+import dynamic from "next/dynamic";
+import { removeFromLocalStorage, saveToLocalStorage } from "@/lib/localStorage";
 
-function findNotes(id, notes) {
-  const note = notes.find((n) => n.questionId === id);
-  return note ? note.content : "";
-}
+const Editor = dynamic(() => import("./Editor"), { ssr: false });
 
 function AddNotes({ id, tag, topic, notes }) {
-  const [note, setNote] = useState(findNotes(id, notes));
+  // const [note, setNote] = useState(findNotes(id, notes));
+  const [note, setNote] = useState("");
   const [isOpen, onClose] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+
+  useEffect(() => {
+    async function findNotes() {
+      setIsUpdating(true);
+      const note = notes.find((n) => n.questionId === id);
+      if (note) {
+        const req = await JSON.parse(note.content);
+
+        setNote(note ? req : "");
+        saveToLocalStorage(req, id);
+      }
+    }
+
+    findNotes();
+    setIsUpdating(false);
+  }, [id]);
 
   const submitNotes = async (event) => {
     event.preventDefault();
@@ -33,7 +48,7 @@ function AddNotes({ id, tag, topic, notes }) {
 
     const error = await addNote({ id, tag, topic, note });
     if (error) {
-      toast.error(error.message);
+      toast.error("Something wrong happened");
     } else {
       toast.success("Note added successfully");
     }
@@ -41,32 +56,44 @@ function AddNotes({ id, tag, topic, notes }) {
     onClose();
   };
 
+  const handleDeleteNote = async (e) => {
+    e.preventDefault();
+    setIsUpdating(true);
+    await deleteNote({ id });
+    removeFromLocalStorage(id);
+    setNote("");
+    setIsUpdating(false);
+  };
+
   return (
     <Dialog onOpenChange={onClose} open={isOpen} modal defaultOpen={false}>
       <DialogTrigger asChild>
-        <Pencil2Icon />
+        <Pencil2Icon className={`${note && "text-red-600 "} `} />
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="min-w-[80vw] h-[80vh] border-2 border-green-600">
         <DialogHeader>
           <DialogTitle>Note&apos;s</DialogTitle>
           <DialogDescription>
             Write your note here. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <form className="grid gap-4 py-4" onSubmit={submitNotes}>
-          <Textarea
-            placeholder="Type your note here."
-            id="note"
-            rows={6}
-            required
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-          />
-          <Button type="submit" disabled={isUpdating}>
-            Save changes
+
+        <Editor id={id} data={note} setNote={setNote} editable={!isUpdating} />
+        <DialogFooter className="fixed bottom-1 right-3">
+          <Button onClick={handleDeleteNote} disabled={isUpdating || !note}>
+            Delete
           </Button>
-        </form>
-        <DialogFooter></DialogFooter>
+          <Button onClick={submitNotes} disabled={isUpdating}>
+            {isUpdating && (
+              <>
+                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </>
+            )}
+
+            {!isUpdating && "Save"}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

@@ -9,7 +9,7 @@ async function Header() {
   const session = await auth();
 
   return (
-    <header className="w-full h-[100px]  flex justify-between items-center px-1 md:px-4 bg-accent shadow-lg shadow-slate-400">
+    <header className="z-50 w-full h-[100px]  flex justify-between items-center px-1 md:px-4 bg-accent shadow-lg shadow-slate-400">
       <Link
         href="/"
         className="text-2xl md:text-3xl italic text-violet-500 font-semibold"

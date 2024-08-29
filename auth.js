@@ -19,7 +19,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
 
       authorize: async (credentials) => {
-        // console.log("credentials=", credentials);
         const email = credentials.email;
         const password = credentials.password;
 
@@ -52,8 +51,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     authorized: async ({ auth }) => {
-      // console.log("auth = ", auth);
-
       return !!auth?.user;
     },
     async session({ session, user }) {

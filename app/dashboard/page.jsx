@@ -8,6 +8,7 @@ import {
   getDataForDashboard,
   getQuestionDoneByLevel,
 } from "@/lib/fetchService";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
@@ -58,21 +59,24 @@ async function page() {
             </p>
           </CardContent>
         </Card>
-        <Card x-chunk="dashboard-01-chunk-0">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Notes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {data?._count?.notes < 10
-                ? `0${data?._count?.notes}`
-                : data?._count?.notes}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Total Questions : 448
-            </p>
-          </CardContent>
-        </Card>
+
+        <Link href="/notes">
+          <Card x-chunk="dashboard-01-chunk-0">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Notes</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {data?._count?.notes < 10
+                  ? `0${data?._count?.notes}`
+                  : data?._count?.notes}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Total Questions : 448
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       <div className=" w-full flex gap-8 h-[400px]">

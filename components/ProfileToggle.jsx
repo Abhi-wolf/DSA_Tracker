@@ -28,6 +28,9 @@ export function ProfileToggle() {
         <DropdownMenuItem onClick={() => router.push("/dashboard")}>
           My Dashboard
         </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push("/notes")}>
+          My Notes
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
