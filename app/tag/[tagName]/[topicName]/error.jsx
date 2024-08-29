@@ -9,6 +9,7 @@ export default function Error({ error, reset }) {
         Something went wrong!
       </h1>
       <p className="text-lg text-red-400">{error.message}</p>
+      <p className="text-lg text-red-400">{error}</p>
 
       <Button onClick={reset}>Try again</Button>
     </main>

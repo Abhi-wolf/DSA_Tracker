@@ -8,7 +8,8 @@ export default function Error({ error, reset }) {
       <h1 className="text-3xl font-semibold text-red-500">
         Something went wrong!
       </h1>
-      {/* <p className="text-lg text-red-400">{error.message}</p> */}
+      <p className="text-lg text-red-400">{error.message}</p>
+      <p className="text-lg text-red-400">{error}</p>
 
       <Button onClick={reset}>Try again</Button>
     </main>
